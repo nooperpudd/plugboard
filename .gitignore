@@ -1,0 +1,6 @@
+.idea/
+.pyc
+.pyo
+.cache/
+__pycache__/
+.pytest_cache/
