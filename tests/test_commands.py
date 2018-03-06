@@ -12,10 +12,8 @@ class TestCommands(unittest.TestCase):
 
     def tearDown(self):
         pass
-
     def test_find_commands(self):
-
-
+        pass
     def test_load_commands(self):
         pass
 
