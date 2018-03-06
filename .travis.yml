@@ -13,6 +13,8 @@ install:
 
 script:
   - pytest -v -s
+  - py.test -v --cov=plugboard --cov-report xml
+
 
 after_success:
   - codecov -e $TRAVIS_PYTHON_VERSION
