@@ -2,6 +2,33 @@
 import traceback
 
 
+class ValidatorError(Exception):
+    """
+    validator command exception handler
+    """
+    pass
+
+
+class CommandHandlerError(Exception):
+    """
+    Command handler Error
+    """
+    pass
+
+class CommandParserError(Exception):
+    """
+    Command Parser Error
+    """
+    pass
+
+
+class HelpParserError(Exception):
+    """
+    Help Parser Error
+    """
+    pass
+
+
 class PluginException(Exception):
     """
     Plugin handler exception
@@ -22,33 +49,6 @@ class WorkFlowException(Exception):
     """
     pass
 
-
-class ValidatorError(Exception):
-    """
-    validator command exception handler
-    """
-    pass
-
-
-class CommandHandlerError(Exception):
-    """
-    Command handler Error
-    """
-    pass
-
-
-class CommandParserError(Exception):
-    """
-    Command Parser Error
-    """
-    pass
-
-
-class HelpParserError(Exception):
-    """
-    Help Parser Error
-    """
-    pass
 
 
 class SettingsImportError(Exception):

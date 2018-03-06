@@ -1,11 +1,18 @@
 # encoding:utf-8
 
-
 class GlobalSettings(object):
     REDIS_URL = "redis://@localhost:6379/0"
     DEBUG = True
 
     TIMEOUT = 10  # 10 seconds
+
+    TIMEZONE = "UTC"  # default timezone is in UTC
+
+    RETRY_TIMES = 5  # when exec failure
+
+    COMMANDS = []  # command module dirs
+
+    PLUGINS = []  # plugin module dirs
 
     LOGGERS = {
         "version": 1,
@@ -30,11 +37,3 @@ class GlobalSettings(object):
             "handle": ["console"]
         }
     }  # LOGGING CONFIG
-
-    TIMEZONE = "UTC"  # default timezone is in UTC
-
-    RETRY_TIMES = 5  # when exec failure
-
-    COMMANDS = []  # command module dirs
-
-    PLUGINS = []  # plugin module dirs
