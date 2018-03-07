@@ -1,21 +1,27 @@
 # encoding:utf-8
 import abc
 import argparse
+import importlib
 import io
 import logging
-import operator
 import os
 import pkgutil
 from argparse import ArgumentParser
 from functools import lru_cache
-from importlib import import_module
 
 import plugboard.utils
 from plugboard.exceptions import CommandHandlerError
 from plugboard.exceptions import HelpParserError, CommandParserError
 from plugboard.settings import config
 
+# from importlib import import_module
+
 logger = logging.getLogger(__name__)
+
+
+class CommandOutput(io.TextIOBase):
+    # todo textio output
+    pass
 
 
 class HelpAction(argparse.Action):
@@ -133,7 +139,9 @@ def load_command_modules(modules: list, package=None):
     """
     commands = {}
     for module in modules:
-        py_module = import_module(module, package=package)
+
+        py_module = importlib.import_module(module, package=package)
+
         if hasattr(py_module, "Command") and issubclass(py_module.Command, BaseCommand):
             cmd_cls = py_module.Command
             if cmd_cls.name and cmd_cls.name not in commands:
@@ -151,11 +159,11 @@ def load_default_commands():
     """
     parent_module = __name__.rpartition(".")[0]
 
-    local_cmd_dir = os.path.join(os.path.dirname(__file__), "commands")
+    local_cmd_dir = os.path.join(os.path.dirname(__file__), "cmds")
     modules = []
     for _, name, is_pkg in pkgutil.iter_modules([local_cmd_dir]):
         if not is_pkg:
-            modules.append(".commands.%s" % name)
+            modules.append(".cmds.%s" % name)
 
     return load_command_modules(modules, parent_module)
 
@@ -174,25 +182,24 @@ def import_commands(cmd_modules=None):
 
 
 @lru_cache(maxsize=None)
-def get_commands(cmd_modules=None) -> dict:
+def get_commands(cmd_modules: tuple = None):
     """
     get commands
     :return: dict, {command_cls_name:command_cls}
     """
-    commands = {}
-    default_cmds = load_default_commands()
-    default_cmds = sorted(default_cmds, key=operator.itemgetter(0))
 
+    default_cmds = load_default_commands()
     import_cmds = import_commands(cmd_modules)
-    import_cmds = sorted(import_cmds, key=operator.itemgetter(0))
     # check common name keys
     common_keys = plugboard.utils.check_dict_common_keys([import_cmds, default_cmds])
+
     if common_keys:
         raise CommandHandlerError("%s conflict with the default commands" % common_keys)
     else:
-        commands.update(default_cmds)
-        commands.update(import_cmds)
-    return commands
+        default_cmds = dict(sorted(default_cmds.items()))
+        import_cmds = dict(sorted(import_cmds.items()))
+
+        return default_cmds, import_cmds
 
 
 class ManagementUtility(object):
@@ -200,11 +207,22 @@ class ManagementUtility(object):
     command management utility
     """
 
-    def __init__(self, argv: str, *args, **kwargs):
-
+    def __init__(self, argv: str, cmd_modules=None, *args, **kwargs):
+        """
+        :param argv:
+        :param cmd_modules:
+        :param args:
+        :param kwargs:
+        """
         self.command_name = argv.split()[0]
         self.command_argv = argv.split()[1:]  # command argv
-        self.commands = get_commands()
+
+        if cmd_modules:
+            cmd_modules = tuple(cmd_modules)
+        self.default_commands, self.import_commands = get_commands(cmd_modules)
+        self.commands = {}
+        self.commands.update(self.default_commands)
+        self.commands.update(self.import_commands)
 
     def help(self):
         """
