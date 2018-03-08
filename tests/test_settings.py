@@ -18,6 +18,13 @@ class TestLoadSettings(unittest.TestCase):
     def tearDown(self):
         self.config = None
 
+    def test_get_set_items(self):
+        """
+        :return:
+        """
+        self.config.from_object(Local)
+        self.assertEqual(Local.DEBUG, self.config.DEBUG)
+
     def test_global_settings(self):
         for key in GlobalSettings.__dict__:
             if key.isupper():

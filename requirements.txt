@@ -4,6 +4,7 @@ blinker
 git+https://github.com/nooperpudd/hiredis-py.git@master#egg=hiredis
 redis
 pytz
+zope.interface
 
 
 

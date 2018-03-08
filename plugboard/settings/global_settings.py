@@ -1,8 +1,11 @@
 # encoding:utf-8
-
 class GlobalSettings(object):
+
     REDIS_URL = "redis://@localhost:6379/0"
+
     DEBUG = True
+
+    LOG_LEVEL = "INFO"
 
     TIMEOUT = 10  # 10 seconds
 
@@ -14,26 +17,6 @@ class GlobalSettings(object):
 
     PLUGINS = []  # plugin module dirs
 
-    LOGGERS = {
-        "version": 1,
-        "formatters": {
-            "verbose": {
-                "class": "logging.Formatter",
-                "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
-            },
-            "simple": {
-                "class": "logging.Formatter",
-                "format": "%(levelname)s %(message)s"
-            }
-        },
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-                "level": "INFO"
-            }
-        },
-        "root": {
-            "level": "DEBUG",
-            "handle": ["console"]
-        }
-    }  # LOGGING CONFIG
+    LOGGING = {} # consum logging configuration
+
+

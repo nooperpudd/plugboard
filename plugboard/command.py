@@ -10,6 +10,7 @@ from argparse import ArgumentParser
 from functools import lru_cache
 
 import plugboard.utils
+import plugboard
 from plugboard.exceptions import CommandHandlerError
 from plugboard.exceptions import HelpParserError, CommandParserError
 from plugboard.settings import config
@@ -28,8 +29,12 @@ class HelpAction(argparse.Action):
     """
     """
 
-    def __init__(self, option_strings, dest=argparse.SUPPRESS, default=argparse.SUPPRESS, help=None):
-        super(HelpAction, self).__init__(option_strings=option_strings, dest=dest, default=default, nargs=0, help=help)
+    def __init__(self, stdout=None, stderr=None, *args, **kwargs):
+        super(HelpAction, self).__init__(dest=argparse.SUPPRESS,
+                                         default=argparse.SUPPRESS,
+                                         nargs=0, *args, **kwargs)
+        self.stdout = stdout
+        self.stderr = stderr
 
     def __call__(self, parser, namespace, values, option_string=None):
         """
@@ -42,12 +47,16 @@ class HelpAction(argparse.Action):
         output = io.StringIO()
         parser.print_help(output)
         message = output.getvalue()
-        raise HelpParserError(message)
+        # raise HelpParserError(message)
 
 
 class PluginsArgumentParser(ArgumentParser):
     """
     """
+
+    def __init__(self, cmd, **kwargs):
+        self.cmd = cmd
+        super(PluginsArgumentParser, self).__init__(**kwargs)
 
     def error(self, message: str):
         """
@@ -63,14 +72,26 @@ class BaseCommand(metaclass=abc.ABCMeta):
     name = ""
     description = ""
 
-    def __init__(self):
+    def __init__(self, stdout=None, stderr=None):
         """
         """
-        self.__parser = PluginsArgumentParser(self.name, self.description, add_help=False)
-        self.add_arguments(self.__parser)
+        self.stdout = stdout
+        self.stderr = stderr
+        self.parser = None
 
-        self.__parser.add_argument('-h', '--help', action=HelpAction, default=argparse.SUPPRESS,
-                                   help='show this help message')
+    def create_parser(self, prog_name, subcommand):
+
+        prog = "%s %s" % (os.path.basename(prog_name), subcommand)
+        self.parser = PluginsArgumentParser(self,
+                                            prog=prog,
+                                            description=self.description,
+                                            add_help=False)
+        self.parser.add_argument("--version", version=plugboard.get_version(),
+                                 action="version", help="show current app version")
+        self.add_arguments(self.parser)
+
+        self.parser.add_argument('-h', '--help', action=HelpAction, default=argparse.SUPPRESS,
+                                 help='show this help message')
 
     @abc.abstractmethod
     def add_arguments(self, parser):
@@ -104,19 +125,17 @@ class BaseCommand(metaclass=abc.ABCMeta):
         :param argv:
         """
         try:
-            options = self.__parser.parse_args(args=argv)
+            options = self.parser.parse_args(args=argv)
         except CommandParserError as e:
             raise e
         except HelpParserError as e:
             raise e
-        except SystemExit:
-            print("SystemExit error")
         else:
             cmd_options = vars(options)
             if cmd_options:
                 self.execute(**cmd_options)
             else:
-                self.__parser.parse_args(["-h"])
+                self.parser.parse_args(["-h"])
 
     def execute(self, *args, **options):
         """
@@ -235,7 +254,8 @@ class ManagementUtility(object):
         for command in self.commands:
             usage.append("--> %s" % command)
         message = "\n".join(usage)
-        return message
+        print(message)
+        # todo add output message wrapper
 
     def execute(self):
         """

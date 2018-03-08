@@ -1,4 +1,5 @@
 # encoding:utf-8
+import copy
 import importlib
 
 from plugboard.exceptions import SettingsImportError
@@ -8,17 +9,16 @@ from .global_settings import GlobalSettings
 class ConfigSettings(dict):
     """
     """
-    def __init__(self, defaults=GlobalSettings):
-        super(dict, self).__init__()
-        self.defaults = defaults
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.setup()
 
-    def setup(self):
+    def setup(self, defaults=GlobalSettings):
         """
         load settings form default global
         :return:
         """
-        self.from_object(self.defaults)
+        self.from_object(defaults)
 
     def import_string(self, path, silent):
         """
@@ -54,6 +54,12 @@ class ConfigSettings(dict):
         for key in dir(obj):
             if key.isupper():
                 self[key] = getattr(obj, key)
+
+    def __getattr__(self, item):
+        return self[item]
+
+    def __deepcopy__(self, memo):
+        return ConfigSettings(copy.deepcopy(dict(self)))
 
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, dict.__repr__(self))
