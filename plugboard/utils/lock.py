@@ -2,7 +2,6 @@
 import functools
 import inspect
 
-from devops.cache import redis_connect
 
 
 def lock_func(lock_key):

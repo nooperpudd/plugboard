@@ -10,10 +10,13 @@ class Command(BaseCommand):
     description = "create app engine"
 
     def add_arguments(self, parser):
+
         pass
+         # parser.add_argument("", dest="", required=True, help="create project name")
 
     def handler(self, *args, **options):
-        pass
+        name = options.get("name")
+
 
     def notify(self, *args, **kwargs):
         pass

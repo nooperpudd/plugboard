@@ -4,9 +4,7 @@ import functools
 import inspect
 import logging
 
-from devops.cache import redis_connect
-
-log = logging.Logger(__name__)
+log = logging.getLogger("plugboard.plugins")
 
 
 class MetaPlugin(type):
