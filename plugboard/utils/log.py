@@ -3,6 +3,7 @@ import logging
 import logging.config
 
 from plugboard.settings import config
+from plugboard.settings.global_settings import DEFAULT_LOGGING
 
 
 class RequireDebugFalse(logging.Filter):
@@ -16,73 +17,9 @@ class RequireDebugTrue(logging.Filter):
         return config.DEBUG
 
 
-DEFAULT_LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "filters": {
-        'debug_false': {
-            '()': 'plugboard.utils.log.RequireDebugFalse',
-        },
-        'debug_true': {
-            '()': 'plugboard.utils.log.RequireDebugTrue',
-        },
-    },
-    "formatters": {
-        "details": {
-            "class": "logging.Formatter",
-            "format": "%(asctime)s %(levelname)s %(module)s %(process)d %(thread)d %(message)s",
-        },
-        "default": {
-            "class": "logging.Formatter",
-            "format": "%(asctime)s %(levelname)s %(name)s %(message)s"
-        },
-        "plugins": {
-            "class": "",
-            "format": ""
-        }
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "level": "INFO",
-            "filters": ["debug_true"],
-            "formatter": "default",
-        },
-        "commands": {
-            "class": "logging.StreamHandler",
-            "level": "INFO",
-            "filters": ["debug_true"],
-            "formatter": "default"
-        },
-        "plugins": {
-            "class": "logging.StreamHandler",
-            "level": "INFO",
-            "formatter": "plugins"
-        }
-    },
-    "loggers": {
-        "plugboard": {
-            "level": "INFO",
-            "handlers": ["console"]
-        },
-        "plugboard.commands": {
-            "level": "INFO",
-            "handlers": ["commands"],
-            "propagate": False
-        },
-        "plugboard.plugins": {
-            "level": "INFO",
-            "handlers": ["plugins"],
-            "propagate": False
-        }
-
-    }
-}  # LOGGING CONFIG
-
-
-def configure_logging(logging_config):
+def configure_logging(logging_config=None):
     """
-    :param logging_config:
+    :param logging_config: logging config dict
     :return:
     """
     logging.config.dictConfig(DEFAULT_LOGGING)

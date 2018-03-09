@@ -20,3 +20,64 @@ class GlobalSettings(object):
     LOGGING = {} # consum logging configuration
 
 
+DEFAULT_LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        'debug_false': {
+            '()': 'plugboard.utils.log.RequireDebugFalse',
+        },
+        'debug_true': {
+            '()': 'plugboard.utils.log.RequireDebugTrue',
+        },
+    },
+    "formatters": {
+        "details": {
+            "class": "logging.Formatter",
+            "format": "%(asctime)s %(levelname)-8s %(name)-12s:"
+                      " %(module)s %(processName)-10s %(thread)d %(message)s",
+        },
+        "default": {
+            "class": "logging.Formatter",
+            "format": "%(asctime)s %(name)-12s: %(levelname)-8s  %(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "filters": ["debug_true"],
+            "formatter": "default",
+        },
+        "commands": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "filters": ["debug_true"],
+            "formatter": "default"
+        },
+        "plugins": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "details"
+        }
+    },
+    "loggers": {
+        "plugboard": {
+            "level": "INFO",
+            "handlers": ["console"]
+        },
+        "plugboard.commands": {
+            "level": "INFO",
+            "handlers": ["commands"],
+            "propagate": False
+        },
+        "plugboard.plugins": {
+            "level": "INFO",
+            "handlers": ["plugins"],
+            "propagate": False
+        }
+
+    }
+}  # LOGGING CONFIG
+
+
