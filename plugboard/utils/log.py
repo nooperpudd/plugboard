@@ -7,7 +7,6 @@ from plugboard.settings.global_settings import DEFAULT_LOGGING
 
 
 class RequireDebugFalse(logging.Filter):
-
     def filter(self, record):
         return not config.DEBUG
 

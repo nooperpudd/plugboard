@@ -1,4 +1,9 @@
 # encoding:utf-8
 
-import zope.interface
+from zope.interface import Interface
 
+
+class InterfacePluginBase(Interface):
+    """
+    """
+    

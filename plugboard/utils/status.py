@@ -8,8 +8,7 @@ class TaskEvent(Enum):
     RUNNING = auto()
     FAILURE = auto()
     SUCCESS = auto()
-    UNKNOWN = auto()
     KILLED = auto()
 
 class PluginStatus(Enum):
-    pass
+    

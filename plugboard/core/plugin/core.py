@@ -3,6 +3,9 @@ import contextlib
 import functools
 import inspect
 import logging
+import threading
+
+import io
 
 log = logging.getLogger("plugboard.plugins")
 
@@ -13,15 +16,13 @@ class MetaPlugin(type):
     def __new__(mcs, *args, **kwargs):
         pass
 
-
-class Message(object):
+class PluginOutput(io.TextIOWrapper):
     pass
 
 
 class PluginBase(object):
     """
     """
-
     def __init__(self, plugin_args=None, *args, **kwargs):
         if plugin_args:
             self.args = plugin_args
@@ -46,6 +47,17 @@ class PluginBase(object):
         """
         raise NotImplementedError()
 
+    def failure(self):
+        raise NotImplementedError()
+
+    def exit(self):
+        raise NotImplementedError()
+
+    def log(self):
+        pass
+
+
+
 
 class PluginCore(object):
     """
@@ -53,6 +65,7 @@ class PluginCore(object):
 
     def __init__(self):
         self.modules = []
+        self.lock = threading.Lock() # lock
 
     def __call__(self, *args, **kwargs):
         pass
@@ -122,7 +135,6 @@ def exec_order():
 class PluginApp(object):
     """
     """
-
     def __init__(self, name, priority, timeout, retry_times, lock, **options):
         """
         :param name: plugin name
@@ -147,6 +159,7 @@ class PluginApp(object):
 
     def __call__(self, *args, **kwargs):
         pass
+
 
     @contextlib.contextmanager
     def locked(self, name):
@@ -235,3 +248,11 @@ class PluginManagement(object):
 
 
 plugin_core = PluginCore()
+
+
+class PluginUtility(object):
+
+    def __init__(self):
+        pass
+    def load_plugins(self):
+        pass
