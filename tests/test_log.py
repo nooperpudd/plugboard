@@ -11,7 +11,7 @@ class LoggerTest(unittest.TestCase):
     """
     def setUp(self):
         log.configure_logging()
-        self.logger = logging.getLogger("plugboard")
+        self.logger = logging.getLogger("pluginboard")
         self.logger_output = io.StringIO()
 
         self.old_stream = self.logger.handlers[0].stream

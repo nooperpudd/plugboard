@@ -35,7 +35,7 @@ setup(
     author_email="365504029@qq.com",
     description="Python Command Tasks For WorkFlow",
     long_description=codecs.open("README.rst", encoding="utf-8").read(),
-    url="https://github.com/nooperpudd/plugboard",
+    url="https://github.com/nooperpudd/pluginboard",
     keywords=["plugins engine", "commands"],
     license="BSD",
     zip_safe=False,

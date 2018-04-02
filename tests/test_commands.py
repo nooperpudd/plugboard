@@ -21,7 +21,7 @@ class TestCommands(unittest.TestCase):
         }
         self.assertDictEqual(default_cmds, result_cmds)
 
-    @unittest.mock.patch("plugboard.settings.config")
+    @unittest.mock.patch("pluginboard.settings.config")
     def test_import_commands_with_settings(self, config):
         config.from_object(Local)
         user_cmds = import_commands()

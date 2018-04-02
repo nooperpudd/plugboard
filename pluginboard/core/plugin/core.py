@@ -8,7 +8,7 @@ import threading
 
 from pluginboard.utils.status import PluginStatus
 
-log = logging.getLogger("plugboard.plugins")
+log = logging.getLogger("pluginboard.plugins")
 
 
 class PluginOutput(io.TextIOBase):

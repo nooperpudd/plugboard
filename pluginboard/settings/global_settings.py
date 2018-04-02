@@ -25,10 +25,10 @@ DEFAULT_LOGGING = {
     "disable_existing_loggers": False,
     "filters": {
         'debug_false': {
-            '()': 'plugboard.utils.log.RequireDebugFalse',
+            '()': 'pluginboard.utils.log.RequireDebugFalse',
         },
         'debug_true': {
-            '()': 'plugboard.utils.log.RequireDebugTrue',
+            '()': 'pluginboard.utils.log.RequireDebugTrue',
         },
     },
     "formatters": {
@@ -62,16 +62,16 @@ DEFAULT_LOGGING = {
         }
     },
     "loggers": {
-        "plugboard": {
+        "pluginboard": {
             "level": "INFO",
             "handlers": ["console"]
         },
-        "plugboard.commands": {
+        "pluginboard.commands": {
             "level": "INFO",
             "handlers": ["commands"],
             "propagate": False
         },
-        "plugboard.plugins": {
+        "pluginboard.plugins": {
             "level": "INFO",
             "handlers": ["plugins"],
             "propagate": False
