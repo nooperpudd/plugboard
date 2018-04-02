@@ -2,6 +2,15 @@
 import traceback
 
 
+class ParameterError(Exception):
+    """
+    Parameter Error Handler
+    """
+class MissingParameterError(Exception):
+    """
+    Missing Parameter Error
+    """
+
 class ValidatorError(Exception):
     """
     validator command exception handler
@@ -48,7 +57,6 @@ class WorkFlowException(Exception):
     workflow exception
     """
     pass
-
 
 
 class SettingsImportError(Exception):

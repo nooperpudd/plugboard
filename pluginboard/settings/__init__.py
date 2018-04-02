@@ -2,7 +2,7 @@
 import copy
 import importlib
 
-from plugboard.exceptions import SettingsImportError
+from pluginboard.exceptions import SettingsImportError
 from .global_settings import GlobalSettings
 
 

@@ -1,4 +1,5 @@
 # encoding:utf-8
+
 class EventHook(object):
     """
     Simple event class used to provide hooks for different types of events in Locust.
@@ -25,3 +26,9 @@ class EventHook(object):
     def fire(self, **kwargs):
         for handler in self._handlers:
             handler(**kwargs)
+
+
+class EventEngine(object):
+    """
+    """
+    pass

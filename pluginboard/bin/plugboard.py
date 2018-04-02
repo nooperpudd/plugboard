@@ -1,6 +1,6 @@
 # encoding:utf-8
 
-from plugboard.command import ManagementUtility
+from pluginboard.command import ManagementUtility
 
 
 if __name__ == "__main__":

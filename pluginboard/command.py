@@ -6,14 +6,15 @@ import io
 import logging
 import os
 import pkgutil
+import sys
 from argparse import ArgumentParser
 from functools import lru_cache
 
-import plugboard.utils
-import plugboard
-from plugboard.exceptions import CommandHandlerError
-from plugboard.exceptions import HelpParserError, CommandParserError
-from plugboard.settings import config
+import pluginboard
+import pluginboard.utils
+from pluginboard.exceptions import CommandHandlerError
+from pluginboard.exceptions import HelpParserError, CommandParserError
+from pluginboard.settings import config
 
 # from importlib import import_module
 
@@ -69,14 +70,14 @@ class PluginsArgumentParser(ArgumentParser):
 class BaseCommand(metaclass=abc.ABCMeta):
     """
     """
-    name = ""
-    description = ""
+    name = None
+    description = None
 
     def __init__(self, stdout=None, stderr=None):
         """
         """
-        self.stdout = stdout
-        self.stderr = stderr
+        self.stdout = stdout or sys.stdout
+        self.stderr = stderr or sys.stderr
         self.parser = None
 
     def create_parser(self, prog_name, subcommand):
@@ -86,7 +87,7 @@ class BaseCommand(metaclass=abc.ABCMeta):
                                             prog=prog,
                                             description=self.description,
                                             add_help=False)
-        self.parser.add_argument("--version", version=plugboard.get_version(),
+        self.parser.add_argument("--version", version=pluginboard.get_version(),
                                  action="version", help="show current app version")
         self.add_arguments(self.parser)
 
@@ -208,9 +209,10 @@ def get_commands(cmd_modules: tuple = None):
     """
 
     default_cmds = load_default_commands()
+    print(default_cmds)
     import_cmds = import_commands(cmd_modules)
     # check common name keys
-    common_keys = plugboard.utils.check_dict_common_keys([import_cmds, default_cmds])
+    common_keys = pluginboard.utils.check_dict_common_keys([import_cmds, default_cmds])
 
     if common_keys:
         raise CommandHandlerError("%s conflict with the default commands" % common_keys)
@@ -226,15 +228,19 @@ class ManagementUtility(object):
     command management utility
     """
 
-    def __init__(self, argv: str, cmd_modules=None, *args, **kwargs):
+    def __init__(self, argv: str = None, cmd_modules=None, stdout=None, stderr=None):
         """
         :param argv:
         :param cmd_modules:
-        :param args:
-        :param kwargs:
+        :param stdout:
+        :param stderr:
+
         """
-        self.command_name = argv.split()[0]
-        self.command_argv = argv.split()[1:]  # command argv
+        self.stdout = stdout or sys.stdout
+        self.stderr = stderr or sys.stderr
+
+        self.argv = argv or sys.argv[:]
+        self.program_name = os.path.basename(self.argv[0])
 
         if cmd_modules:
             cmd_modules = tuple(cmd_modules)
@@ -248,26 +254,45 @@ class ManagementUtility(object):
         :return:
         """
         usage = [
-            "Type '<command> -h/--help' for help on a specific command"
+            "Type '<command> -h/--help' for help on a specific command",
             "Available commands:"
         ]
-        for command in self.commands:
-            usage.append("--> %s" % command)
-        message = "\n".join(usage)
-        print(message)
-        # todo add output message wrapper
+        for command in self.default_commands:
+            usage.append("--> {0} ".format(command))
+
+        if self.import_commands:
+
+            usage.append("Import Commands:")
+
+            for command in self.import_commands:
+                usage.append("--> %s" % command)
+
+        return "\n".join(usage)
 
     def execute(self):
         """
         :return:
         """
         try:
-            sub_command = self.commands[self.command_name]
-        except KeyError:
-            self.help()
+            sub_cmd = self.argv[1]
+        except IndexError:
+            self.stdout.write(self.help() + "\n")
         else:
-            instance = sub_command()
-            instance.run_from_argv(self.command_argv)
+            if sub_cmd in self.commands:
+                pass
+            elif sub_cmd == "--version":
+                pass
+
+
+
+            # print(sub_cmd)
+        # try:
+        #     sub_command = self.commands[self.command_name]
+        # except KeyError:
+        #     self.help()
+        # else:
+        #     instance = sub_command()
+        #     instance.run_from_argv(self.command_argv)
 
 
 def execute_command(argv=None):

@@ -1,12 +1,12 @@
 # encoding:utf-8
 import unittest.mock
 
-from plugboard.cmds import app
-from plugboard.command import (load_default_commands,
-                               import_commands,
-                               get_commands,
-                               execute_command)
-from plugboard.exceptions import CommandHandlerError
+from pluginboard.cmds import app
+from pluginboard.command import (load_default_commands,
+                                 import_commands,
+                                 get_commands,
+                                 execute_command)
+from pluginboard.exceptions import CommandHandlerError
 from .user_commands import cac_command, default_command
 # from plugboard.settings import config
 from .user_settings.local import Local

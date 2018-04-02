@@ -2,8 +2,8 @@
 import copy
 import unittest
 
-from plugboard.exceptions import SettingsImportError
-from plugboard.settings import GlobalSettings
+from pluginboard.exceptions import SettingsImportError
+from pluginboard.settings import GlobalSettings
 from .user_settings.local import Local, Product
 
 
@@ -12,7 +12,7 @@ class TestLoadSettings(unittest.TestCase):
     """
 
     def setUp(self):
-        from plugboard.settings import config
+        from pluginboard.settings import config
         self.config = copy.deepcopy(config)
 
     def tearDown(self):

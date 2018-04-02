@@ -1,49 +1,65 @@
 # encoding:utf-8
-import contextlib
+import abc
 import functools
 import inspect
+import io
 import logging
 import threading
 
-import io
+from pluginboard.utils.status import PluginStatus
 
 log = logging.getLogger("plugboard.plugins")
+
+
+class PluginOutput(io.TextIOBase):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def __repr__(self):
+        pass
 
 
 class MetaPlugin(type):
     """
     """
+
     def __new__(mcs, *args, **kwargs):
         pass
 
-class PluginOutput(io.TextIOWrapper):
-    pass
 
+class PluginBase(metaclass=abc.ABCMeta):
+    """
+    plugin Base engine to exec workflow
 
-class PluginBase(object):
     """
-    """
-    def __init__(self, plugin_args=None, *args, **kwargs):
-        if plugin_args:
-            self.args = plugin_args
-        else:
-            self.args = {}
+    name = None
+
+    plug_state = PluginStatus()
+
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self._state = None
         self.callback = None
-        self.config = None
 
-    def run(self, *args, **kwargs):
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, value):
+        self._state = ""
+
+    def start(self):
         """
         the core plugin member that should be implemented by
         all plugins.
-        :param args:
-        :param kwargs:
         :return:
         """
         raise NotImplementedError()
 
     def exception(self):
         """
-        :return:
         """
         raise NotImplementedError()
 
@@ -53,9 +69,12 @@ class PluginBase(object):
     def exit(self):
         raise NotImplementedError()
 
-    def log(self):
+
+    def __str__(self):
         pass
 
+    def autoload(self):
+        pass
 
 
 
@@ -65,7 +84,7 @@ class PluginCore(object):
 
     def __init__(self):
         self.modules = []
-        self.lock = threading.Lock() # lock
+        self.lock = threading.Lock()  # lock
 
     def __call__(self, *args, **kwargs):
         pass
@@ -135,6 +154,7 @@ def exec_order():
 class PluginApp(object):
     """
     """
+
     def __init__(self, name, priority, timeout, retry_times, lock, **options):
         """
         :param name: plugin name
@@ -160,17 +180,16 @@ class PluginApp(object):
     def __call__(self, *args, **kwargs):
         pass
 
-
-    @contextlib.contextmanager
-    def locked(self, name):
-        """
-        :return:
-        """
-        lock = redis_connect.lock(name)
-        have_lock = lock.acquire(blocking=True)
-        if have_lock and redis_connect.get(lock_key):
-            lock.release()
-        return ret_value
+    # @contextlib.contextmanager
+    # def locked(self, name):
+    #     """
+    #     :return:
+    #     """
+    #     lock = redis_connect.lock(name)
+    #     have_lock = lock.acquire(blocking=True)
+    #     if have_lock and redis_connect.get(lock_key):
+    #         lock.release()
+    #     return ret_value
 
     def before_start(self):
         pass
@@ -233,7 +252,7 @@ class PluginManagement(object):
                 lock = redis_connect.lock(lock_key, timeout=timeout)
                 have_lock = lock.acquire(blocking=True)
                 if have_lock:
-                    results = self._plugin_start(name,plugin_app,*args,**kwargs)
+                    results = self._plugin_start(name, plugin_app, *args, **kwargs)
 
     def _plugin_start(self, name, app, *args, **kwargs):
         try:
@@ -250,9 +269,41 @@ class PluginManagement(object):
 plugin_core = PluginCore()
 
 
+class PluginRegister(object):
+    """
+    register plugin factory
+    """
+
+    def __init__(self):
+        self._registry = []
+
+    def get(self, data, *args, **kwargs):
+        """
+        :param data:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if isinstance(data, PluginApp):
+            return data
+        for factory, _type in self._registry:
+            if isinstance(data, _type):
+                return factory(data, *args, **kwargs)
+
+    def register(self, factory, _type):
+        """
+
+        :param factory:
+        :param _type:
+        :return:
+        """
+        self._registry.append((factory, type))
+
+
 class PluginUtility(object):
 
     def __init__(self):
         pass
+
     def load_plugins(self):
         pass

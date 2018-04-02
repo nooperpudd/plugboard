@@ -1,6 +1,6 @@
 # encoding:utf-8
 
-from plugboard.command import BaseCommand
+from pluginboard.command import BaseCommand
 
 
 class Command(BaseCommand):

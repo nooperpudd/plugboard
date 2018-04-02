@@ -1,8 +1,8 @@
 # encoding:utf-8
 import coloredlogs
 
-from plugboard.settings import config
-from plugboard.utils.log import configure_logging
+from pluginboard.settings import config
+from pluginboard.utils.log import configure_logging
 
 coloredlogs.install(config.LOG_LEVEL)
 

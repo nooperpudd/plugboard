@@ -11,7 +11,7 @@ install:
   - pip install -r requirements-dev.txt --upgrade
 script:
   - pytest -v -s
-  - py.test -v --cov=plugboard --cov-report xml
+  - py.test -v --cov=pluginboard --cov-report xml
 
 after_success:
   - codecov -e $TRAVIS_PYTHON_VERSION

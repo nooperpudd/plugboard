@@ -3,7 +3,7 @@ import io
 import logging
 import unittest.mock
 
-from plugboard.utils import log
+from pluginboard.utils import log
 
 
 class LoggerTest(unittest.TestCase):

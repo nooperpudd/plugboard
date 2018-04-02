@@ -10,5 +10,8 @@ class TaskEvent(Enum):
     SUCCESS = auto()
     KILLED = auto()
 
+
 class PluginStatus(Enum):
+    FAILURE = auto()
+    SUCCESS = auto()
     

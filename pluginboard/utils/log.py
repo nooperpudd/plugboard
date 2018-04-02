@@ -2,8 +2,8 @@
 import logging
 import logging.config
 
-from plugboard.settings import config
-from plugboard.settings.global_settings import DEFAULT_LOGGING
+from pluginboard.settings import config
+from pluginboard.settings.global_settings import DEFAULT_LOGGING
 
 
 class RequireDebugFalse(logging.Filter):
