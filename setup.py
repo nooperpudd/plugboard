@@ -2,7 +2,8 @@
 import codecs
 import os
 import re
-from distutils.core import setup
+
+from setuptools import setup, find_packages
 
 
 def find_version(*file_paths):
@@ -27,15 +28,17 @@ def find_version(*file_paths):
 setup(
     name="plugboard",
     version=find_version("plugboard", "__init__.py"),
-    packages=["plugboard"],
-    platforms=["win32", "linux"],
-    description="Python Command Tasks For WorkFlow",
-    url="https://github.com/nooperpudd/plugboard",
+    packages=find_packages(where="plugboard", exclude=["tests*", "examples"]),
+    install_requires=codecs.open("requirements.txt", encoding="utf-8").readlines(),
+    platforms="any",
     author="Winton Wang",
     author_email="365504029@qq.com",
-    keywords=["plugins", "commands"],
+    description="Python Command Tasks For WorkFlow",
+    long_description=codecs.open("README.rst", encoding="utf-8").read(),
+    url="https://github.com/nooperpudd/plugboard",
+    keywords=["plugins engine", "commands"],
     license="BSD",
-    package_dir={"plugboard": "plugboard"},
+    zip_safe=False,
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -43,9 +46,11 @@ setup(
         'Operating System :: MacOS',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 3',
+        "Programming Language :: Python :: 3 :: Only",
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Topic :: Software Development',
+        "Topic :: Software Development",
+        "Topic :: Software Development :: Libraries"
     ],
 )

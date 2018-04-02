@@ -1,8 +1,7 @@
 language: python
-
 python:
-  - "3.5"
-  - "3.6"
+  - '3.5'
+  - '3.6'
 
 cache: pip
 
@@ -10,11 +9,18 @@ install:
   - pip install --upgrade setuptools pip
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt --upgrade
-
 script:
   - pytest -v -s
   - py.test -v --cov=plugboard --cov-report xml
 
-
 after_success:
   - codecov -e $TRAVIS_PYTHON_VERSION
+
+deploy:
+  provider: pypi
+  user: nooperpudd
+  password:
+    secure: JvEJ8uaSKPQ2F315AiXauYiyFXAj/NLoN7SKZVkg6eZu3qs+sL/pK630pPnxhotEUdv2YCc5sxVCMwfvaH5qtPXUiQnmhLp9ZVvwmNxt5FIJWEgwMFym/MG1EYXi2HufM3FhblNZjXGFQgdxS25al7eHea5o57v8f5OoV6pPrRFT7bA9vTSK1U5dpIX9NmK3Gyw08/rLxoDDl+Uo295C+/X624MPCsmG6oQwMwxEsU6SofCFA//cJcjCq++71YYCtFg5DfChxKe806vINcSOpW/ycZZswfTsvjtyfQjdqTH/yFsEICByBQbDL2h3crLcqP1Nmi/NOT91u9uvO+5XrENzwoVSTLPmZ7qILukqbVi14qpKcG4DqFCLSKUmf8kKOoUeyvjZMuXQNku1hW2O67qcvTt1QUsjB8pVNRHFfPC8hTxaTLhtTL+XOUu64U7pW77sE82wwjhElpP2/h1uKt05bkers2CzR0KOY9gRFZzXE+D68Vu9p3Gbcu1tCqMhNss06nIAy7GwcREKNciYb/Rk4aVfuInuEX74qerUjm57t/bh+KEkqlVYJ/ZZdIrYdSZJ4QcA6nnq2O0aj2QjP5L524DjA/Rha68H8VQE2uINu58KkLqziDFcP3xG29Y5RfwBppkIklyPlGrM5LekP8LEU8J1uL4/yAnLfeMkTWE=
+  distributions: "sdist"
+  on:
+    tags: true
