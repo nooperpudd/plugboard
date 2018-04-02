@@ -21,5 +21,5 @@ Python commands Tasks Plugins Modules
 .. |pyversion| image:: https://img.shields.io/pypi/pyversions/pluginboard.svg
     :target: https://pypi.python.org/pypi/pluginboard
 
-.. |requirements| image:: https://requires.io/github/nooperpudd/pluginboard/requirements.svg
-    :target: https://requires.io/github/nooperpudd/pluginboard/requirements/
+.. |requirements| image:: https://requires.io/github/nooperpudd/pluginboard/requirements.svg?branch=master
+    :target: https://requires.io/github/nooperpudd/pluginboard/requirements/?branch=master
