@@ -3,7 +3,7 @@ Python commands Tasks Plugins Modules
 
 |travis| |codecov| |codacy| |requirements| |pypi| |status| |pyversion|
 
-.. |travis| image:: https://travis-ci.org/nooperpudd/pluginboard.svg
+.. |travis| image:: https://travis-ci.org/nooperpudd/pluginboard.svg?branch=master
     :target: https://travis-ci.org/nooperpudd/pluginboard
 
 .. |codecov| image:: https://codecov.io/gh/nooperpudd/pluginboard/branch/master/graph/badge.svg
