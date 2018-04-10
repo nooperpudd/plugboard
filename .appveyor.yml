@@ -23,15 +23,10 @@ cache:
   - '%LocalAppData%\pip\Cache'
 
 image:
+
 - Visual Studio 2017
 
 environment:
-
-  global:
-    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
-    # /E:ON and /V:ON options are not enabled in the batch script intepreter
-    # See: http://stackoverflow.com/a/13751649/163740
-    CMD_IN_ENV: 'cmd /E:ON /V:ON /C .\extra\appveyor\compiler.cmd'
 
   matrix:
     - PYTHON_DIR: "C:\\Python36-x64"
@@ -48,13 +43,13 @@ build: off
 
 install:
 
-  - "SET PATH=%PYTHON_DIR%;%PYTHON_DIR%\\Scripts;%PATH%"
+  - "SET PATH=%PYTHON_DIR%;%PYTHON_DIR%\\bin;%PYTHON_DIR%\\Scripts;%PATH%"
 
   # Check that we have the expected version and architecture for Python
   - cmd: "%PYTHON% --version"
   - cmd: "%PYTHON% -m pip install -U pip setuptools wheel"
 
-  - cmd: "%CMD_IN_ENV% %PYTHON% -m pip install -r requirements.txt"
+  - cmd: "%PYTHON% -m pip install -r requirements.txt"
   - cmd: "%PYTHON% -m pip install pytest"
 
 test_script:
