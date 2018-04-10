@@ -28,7 +28,7 @@ def find_version(*file_paths):
 setup(
     name="pluginboard",
     version=find_version("pluginboard", "__init__.py"),
-    packages=find_packages(where="pluginboard", exclude=["tests*", "examples"]),
+    packages=find_packages(exclude=["tests*", "examples"]),
     install_requires=codecs.open("requirements.txt", encoding="utf-8").readlines(),
     platforms="any",
     author="Winton Wang",

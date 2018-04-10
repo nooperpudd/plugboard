@@ -1,13 +1,16 @@
 Python commands Tasks Plugins Modules
 =====================================
 
-|travis| |codecov| |codacy| |requirements| |pypi| |status| |pyversion|
+|travis| |appveyor| |codecov| |codacy| |requirements| |pypi| |status| |pyversion|
 
 .. |travis| image:: https://travis-ci.org/nooperpudd/pluginboard.svg?branch=master
     :target: https://travis-ci.org/nooperpudd/pluginboard
 
 .. |codecov| image:: https://codecov.io/gh/nooperpudd/pluginboard/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/nooperpudd/pluginboard
+
+.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/q3scrnyw3fat7er7/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/nooperpudd/pluginboard/branch/master
 
 .. |codacy| image:: https://api.codacy.com/project/badge/Grade/33015d2fcaa7481788b1a833db79ef3f
     :target: https://www.codacy.com/app/nooperpudd/pluginboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nooperpudd/pluginboard&amp;utm_campaign=Badge_Grade

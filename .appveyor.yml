@@ -53,7 +53,7 @@ install:
   # Check that we have the expected version and architecture for Python
   - cmd: "%PYTHON% --version"
   - cmd: "%PYTHON% -m pip install -U pip setuptools wheel"
-  - cmd: "%PYTHON% -m pip --version"
+
   - cmd: "%CMD_IN_ENV% %PYTHON% -m pip install -r requirements.txt"
   - cmd: "%PYTHON% -m pip install pytest"
 
