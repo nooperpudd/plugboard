@@ -6,15 +6,6 @@
 Welcome to pluginboard's documentation!
 =======================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+PluginBoard is the automation plugins board for other sub micro-tasks to execute,
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+command tools for

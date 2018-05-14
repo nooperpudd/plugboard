@@ -12,11 +12,10 @@ from functools import lru_cache
 
 import pluginboard
 import pluginboard.utils
-from pluginboard.exceptions import CommandHandlerError
-from pluginboard.exceptions import HelpParserError, CommandParserError
+from pluginboard.exceptions import CommandHandlerError, HelpParserError, CommandParserError
 from pluginboard.settings import config
 
-# from importlib import import_module
+from importlib import import_module
 
 logger = logging.getLogger(__name__)
 
@@ -46,9 +45,7 @@ class HelpAction(argparse.Action):
         :return:
         """
         output = io.StringIO()
-        parser.print_help(output)
-        message = output.getvalue()
-        # raise HelpParserError(message)
+        parser.print_help(output.getvalue())
 
 
 class PluginsArgumentParser(ArgumentParser):
@@ -80,15 +77,13 @@ class BaseCommand(metaclass=abc.ABCMeta):
         self.stderr = stderr or sys.stderr
         self.parser = None
 
-    def create_parser(self, prog_name, subcommand):
+    def create_parser(self, prog_name, sub_command):
 
-        prog = "%s %s" % (os.path.basename(prog_name), subcommand)
+        prog = "%s %s" % (os.path.basename(prog_name), sub_command)
         self.parser = PluginsArgumentParser(self,
                                             prog=prog,
                                             description=self.description,
                                             add_help=False)
-        self.parser.add_argument("--version", version=pluginboard.get_version(),
-                                 action="version", help="show current app version")
         self.add_arguments(self.parser)
 
         self.parser.add_argument('-h', '--help', action=HelpAction, default=argparse.SUPPRESS,
@@ -125,6 +120,9 @@ class BaseCommand(metaclass=abc.ABCMeta):
         """
         :param argv:
         """
+        print(argv)
+
+        self.parser = self.create_parser(argv[0], argv[1])
         try:
             options = self.parser.parse_args(args=argv)
         except CommandParserError as e:
@@ -228,7 +226,8 @@ class ManagementUtility(object):
     command management utility
     """
 
-    def __init__(self, argv: str = None, cmd_modules=None, stdout=None, stderr=None):
+    def __init__(self, argv: str = None, cmd_modules=None, stdout=None, stderr=None,
+                 options=None):
         """
         :param argv:
         :param cmd_modules:
@@ -238,9 +237,13 @@ class ManagementUtility(object):
         """
         self.stdout = stdout or sys.stdout
         self.stderr = stderr or sys.stderr
+        self.options = options or {}
 
         self.argv = argv or sys.argv[:]
         self.program_name = os.path.basename(self.argv[0])
+
+        print(self.program_name)
+        print(sys.argv)
 
         if cmd_modules:
             cmd_modules = tuple(cmd_modules)
@@ -258,7 +261,8 @@ class ManagementUtility(object):
             "Available commands:"
         ]
         for command in self.default_commands:
-            usage.append("--> {0} ".format(command))
+            description = self.default_commands[command].description
+            usage.append("  --> {0}: [{1}]".format(command, description))
 
         if self.import_commands:
 
@@ -275,24 +279,21 @@ class ManagementUtility(object):
         """
         try:
             sub_cmd = self.argv[1]
+            # sub_cmd_cls = self.commands[sub_cmd]
         except IndexError:
             self.stdout.write(self.help() + "\n")
         else:
             if sub_cmd in self.commands:
-                pass
+                sub_cmd_cls = self.commands[sub_cmd]
+                if issubclass(sub_cmd_cls, BaseCommand):
+                    instance = sub_cmd_cls(**self.options)
+                    print(self.argv[2:])
+                    instance.run_from_argv(self.argv[:])
+                # self.execute()
             elif sub_cmd == "--version":
-                pass
-
-
-
-            # print(sub_cmd)
-        # try:
-        #     sub_command = self.commands[self.command_name]
-        # except KeyError:
-        #     self.help()
-        # else:
-        #     instance = sub_command()
-        #     instance.run_from_argv(self.command_argv)
+                self.stdout.write(pluginboard.get_version() + "\n")
+            else:
+                self.stdout.write(self.help())
 
 
 def execute_command(argv=None):

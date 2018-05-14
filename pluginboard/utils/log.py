@@ -3,7 +3,6 @@ import logging
 import logging.config
 
 from pluginboard.settings import config
-from pluginboard.settings.global_settings import DEFAULT_LOGGING
 
 
 class RequireDebugFalse(logging.Filter):
@@ -21,6 +20,6 @@ def configure_logging(logging_config=None):
     :param logging_config: logging config dict
     :return:
     """
-    logging.config.dictConfig(DEFAULT_LOGGING)
+    logging.config.dictConfig(config.DEFAULT_LOGGING)
     if logging_config:
         logging.config.dictConfig(logging_config)

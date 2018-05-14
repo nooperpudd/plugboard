@@ -11,7 +11,6 @@ omit=
     sample/*
     tests/*
 
-
 [report]
 show_missing = true
 

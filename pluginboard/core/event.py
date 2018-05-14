@@ -27,6 +27,10 @@ class EventHook(object):
         for handler in self._handlers:
             handler(**kwargs)
 
+    def clear_handler(self,handler):
+        for obj in self._handlers:
+            if obj.self == handler:
+                self -= obj
 
 class EventEngine(object):
     """

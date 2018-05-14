@@ -14,4 +14,4 @@ class TaskEvent(Enum):
 class PluginStatus(Enum):
     FAILURE = auto()
     SUCCESS = auto()
-    
+

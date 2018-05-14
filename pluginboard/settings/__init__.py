@@ -11,16 +11,9 @@ class ConfigSettings(dict):
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.setup()
+        self.from_object(GlobalSettings)
 
-    def setup(self, defaults=GlobalSettings):
-        """
-        load settings form default global
-        :return:
-        """
-        self.from_object(defaults)
-
-    def import_string(self, path, silent):
+    def import_string(self, path, silent=True):
         """
         :param path:
         :param silent:
@@ -42,7 +35,7 @@ class ConfigSettings(dict):
 
     def from_object(self, obj, silent=True):
         """
-        # local settings from pyobject
+        local settings from pyobject
         if obj -> str,
          from_object("app.config")
         :param obj:
